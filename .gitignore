@@ -8,6 +8,9 @@ gettime
 /trash/
 /.trash/
 /*/demo/
+test_*
+tmp_*
+*.tmp
 
 # Prerequisites
 *.d
