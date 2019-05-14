@@ -6,7 +6,7 @@
 #    By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/14 20:17:56 by bleplat          ###   ########.fr        #
+#    Updated: 2019/05/14 20:45:45 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,19 +27,16 @@ TESTED_DIR = ../try0
 
 NAME = tests
 
-INCLUDES = libft/includes
+INCLUDES = -I libft/includes
 SRC_DIR = .
 OBJ_DIR = .
 CP_DIR = copyed_project
 
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra $(INCLUDES)
 LDFLAGS = -L libft -lft
 
 .PHONY:all
-all: import makeproject $(NAME)
-	mkdir -p ok_pieces
-	./genpieces 1> /dev/null
-	chmod 666 ok_pieces/*
+all: makeproject $(NAME)
 	@printf "\e[36mReady to run testerizer.sh!\e[31m\n\n"
 
 
@@ -65,14 +62,21 @@ $(CP_DIR)/push_swap: $(CP_DIR)
 	@printf "\e[35mMaking project..\n"
 	@sh makeproject.sh $(CP_DIR)
 
+
+
 ###############################
 ###    TESTS EXECUTABLES    ###
 ###############################
 
-TESTS_EXE = gettime
+TESTS_EXE = gettime generator
 
 gettime: gettime.c
 	gcc $(CFLAGS) -o3 -o $@ $<
+
+libft/libft.a:
+	make -C libft/
+generator: libft/demo/ft_ints_demo.c libft/libft.a
+	gcc $(CFLAGS) -o3 -o $@ -L./libft -lft $<
 
 
 
@@ -86,18 +90,22 @@ gettime: gettime.c
 $(NAME): $(TESTS_EXE)
 	@printf "\e[34mmake finished\n"
 
+.PHONY: clean
 clean:
 	@printf "\e[35mcleaning...\n"
 	rm -rf tmp
 	rm -f tmp_*
 	rm -rf *.o
 
+.PHONY: fclean
 fclean: clean
 	rm -rf $(CP_DIR) 2> /dev/null
 	rm -rf $(NAME)_*
-	rm -f test_results
-	rm -f gettime
-	rm -f genpieces
-	rm -rf ok_pieces
+	rm -rf test_results
+	rm -rf gettime
+	rm -rf generator
+	rm -rf tmp_*
+	rm -rf *.tmp
 
+.PHONY: re
 re: fclean all
