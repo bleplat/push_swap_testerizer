@@ -31,6 +31,9 @@ function abort_testing
 	return 1
 }
 
+# Make generator
+make generator
+
 # Argument 're' can re-build project
 if [ $1 = "re" ]
 then
@@ -135,11 +138,10 @@ filetest() { # $1 -> file_name
 }
 fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for both outputs will be append)
 	printf $color_def
-	printf "testing $2...\n"
+	#printf "testing $2...\n"
 	# running the command and output to rst files
 	cat "testfiles/$1" | ./copyed_project/checker $2 1> "$your.1" 2> "$your.2"
 	onediff "testfiles/$3" $your "TEST: $2 $3"
-	printf "\n\n"
 }
 
 
@@ -150,10 +152,23 @@ fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for
 
 begintests "Simple functional tests for 'checker'"
 fasttest "pbpapa" "1 2 3" "OK"
+fasttest "rarra" "$(cat testfiles/ordered10.in)" "OK"
+fasttest "pbpapa" "$(./generator 1 121 22)" "OK"
 fasttest "pbpapa" "1 3 2" "KO"
 fasttest "pbpapa" "r g #" "ERROR"
 endtests
 
+begintests "Load tests for 'checker'"
+fasttest "pbpapa" "$(./generator 1 10000 43)" "OK"
+fasttest "rarra" "$(./generator -3000 4096 35)" "OK"
+fasttest "pbpapa" "$(./generator -2 4096 -43)" "KO"
+fasttest "rarra" "$(./generator 5 10000 -1)" "KO"
+fasttest "rarra" "$(./generator 4783749 7000 -34455344)" "KO"
+fasttest "pbpapa" "$(./generator 5 3000 -1) A" "ERROR"
+fasttest "random1338.inst" "$(./generator -9999 2000 999)" "KO"
+fasttest "random1338.inst" "$(./generator 128 10000 2)" "KO"
+fasttest "random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
+endtests
 
 printf $color_def
 printf "ALL TESTS DONE!\n"

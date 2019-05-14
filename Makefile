@@ -6,7 +6,7 @@
 #    By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/14 20:45:45 by bleplat          ###   ########.fr        #
+#    Updated: 2019/05/14 21:09:04 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ all: makeproject $(NAME)
 .PHONY: norminette
 norminette:
 	@printf "\e[36mrunning norminette..\e[31m\n"
-	@norminette $(TESTED_DIR)/ | sed -e "/^Norme: /d" | sed -e "/^Warning: /d"
+	@sh normproject.sh
 
 .PHONY: import
 import: $(CP_DIR)
