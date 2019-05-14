@@ -168,6 +168,10 @@ fasttest "pbpapa" "$(./generator 5 3000 -1) A" "ERROR"
 fasttest "random1338.inst" "$(./generator -9999 2000 999)" "KO"
 fasttest "random1338.inst" "$(./generator 128 10000 2)" "KO"
 fasttest "random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
+fasttest "../../../../../../../../../../../dev/urandom" "$(./generator -3000 4096 35)" "ERROR"
+fasttest "../../../../../../../../../../../dev/random" "$(./generator -3000 4096 44444)" "ERROR"
+fasttest "../../../../../../../../../../../dev/zero" "$(./generator -3000 4096 15)" "ERROR"
+fasttest "../../../../../../../../../../../dev/urandom" "$(./generator -3000 4096 -35)" "ERROR"
 endtests
 
 printf $color_def
