@@ -138,22 +138,16 @@ filetest() { # $1 -> file_name
 }
 fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for both outputs will be append)
 	printf $color_def
-	#printf "testing $2...\n"
-	# running the command and output to rst files
 	cat "$1" | ./copyed_project/checker $2 1> "$your.1" 2> "$your.2"
 	onediff "testfiles/$3" $your "TEST: cat $3 | checker $2 ($3)"
 }
 psfasttest() { # $1 -> command   # $2 -> expected (.1 and .2 for both outputs will be append)
 	printf $color_def
-	#printf "testing $2...\n"
-	# running the command and output to rst files
 	./copyed_project/push_swap $1 1> "$your.1" 2> "$your.2"
 	onediff "testfiles/$2" $your "TEST: push_swap $2 (NOTHING)"
 }
 pssorttest() { # $1 -> command   # $2/$3 -> count/shuffle
 	printf $color_def
-	#printf "testing $2...\n"
-	# running the command and output to rst files
 	./copyed_project/push_swap $1 | ./copyed_project/checker $1 1> "$your.1" 2> "$your.2"
 	onediff "testfiles/OK" $your "TEST: push_swap on $2 ints shuffled $3 times?"
 }
@@ -175,6 +169,9 @@ endtests
 begintests "'checker': Advanced tests"
 fasttest "testfiles/empty" "0" "OK"
 fasttest "testfiles/empty" "0 1 2" "OK"
+fasttest "testfiles/empty" "4 6 7" "OK"
+fasttest "testfiles/pb" "4 6 7" "KO"
+fasttest "testfiles/pbpbpb" "4 6 7" "KO"
 fasttest "testfiles/empty" "0 3 2" "KO"
 fasttest "testfiles/0_8_1.inst" "0" "OK"
 fasttest "testfiles/0_8_1.inst" "1" "OK"
