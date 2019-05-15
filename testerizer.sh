@@ -160,13 +160,28 @@ psstatstests() {
 	N_SHUFFLE=$4
 	N_TESTS=$5
 	N_TITLE=$6
-	begintests "$6"
+	begintests "$N_TITLE"
+	rm -f tmp_stats
+	tests=0
+	min=2147483647
+	max=-1
 	for ((i = 0 ; i < $N_TESTS ; i++ ))
 	do
 		./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE > tmp_nums
-		./copyed_project/push_swap $(cat tmp_nums) 1> $your.1 2> $your.2
+		./copyed_project/push_swap $(cat tmp_nums) 1> tmp_inst.1 2> tmp_inst.2
+		cat tmp_inst.1 | ./copyed_project $(cat tmp_nums) 1> $your.1 2> $your.2
 		onediff "testfiles/OK" $your "push_swap $$(./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE)"
+		if [[ "$(cat $your.1)" == OK* ]]; then
+			tests = `expr $tests + 1`
+			instrs=$(wc -l $your)
+			echo $instrs >> tmp_stats
+		fi
 	done
+	if [ $tests -gt 0 ]; then
+		sort -n -o tmp_stats tmp_stats
+		printf "\n%d (MIN) <= you <= %d (MAX)" $(sed '0q;d' tmp_stats) $(sed "`expr $tests - 1`q;d" tmp_stats)
+		printf "\n|--- %d [=== %d ===] %d ---|" $(sed "`expr $tests * 0.25`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr $tests * 0.75`q;d" tmp_stats)
+	fi
 	endtests
 }
 
