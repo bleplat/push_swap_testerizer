@@ -6,7 +6,7 @@
 #    By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/14 21:09:04 by bleplat          ###   ########.fr        #
+#    Updated: 2019/05/15 22:40:06 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ import: $(CP_DIR)
 $(CP_DIR):
 	@printf "\e[35mcopying files..\n"
 	cp -rn $(TESTED_DIR) $(CP_DIR)
+	cat -e $(CP_DIR)/author || cat -e $(CP_DIR)/auteur || $(error No author file!)
 
 .PHONY: makeproject
 makeproject: $(CP_DIR)/push_swap
