@@ -228,6 +228,7 @@ fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
 endtests
 
 begintests "'push_swap': Basic tests"
+psfasttest "" "NOTHING"
 psfasttest "0" "NOTHING"
 psfasttest "0 1" "NOTHING"
 psfasttest "0 1 2" "NOTHING"
@@ -235,6 +236,27 @@ psfasttest "-1 0 1" "NOTHING"
 psfasttest "1 2 3" "NOTHING"
 endtests
 
+begintests "'push_swap': Error handling tests"
+psfasttest "1 9 2 7 4 +-8 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -+8 3 5" "ERROR"
+psfasttest "1 9 2 7 4 ++8 3 5" "ERROR"
+psfasttest "1 9 2 7 4 --8 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -8+ 3 5" "ERROR"
+psfasttest "1 9 2 7 4 8+ 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -8- 3 5" "ERROR"
+psfasttest "1 9 2 7 4 +8- 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -8v 3 5" "ERROR"
+psfasttest "1 9 2 7 4 +- 3 5" "ERROR"
+psfasttest "1 9 2 7 4 + 3 5" "ERROR"
+psfasttest "1 9 2 7 4 - 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -+ 3 5" "ERROR"
+psfasttest "1 9 2 7 4 '' 3 5" "ERROR"
+psfasttest "1 9 2 7 4 ' ' 3 5" "ERROR"
+psfasttest "1 9 2 7 4 '-2 ' 3 5" "ERROR"
+psfasttest "1 9 2 7 4 873487357468265487265842562534 3 5" "ERROR"
+psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "ERROR"
+psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "ERROR"
+endtests
 
 printf $color_def
 printf "ALL TESTS DONE!\n"
