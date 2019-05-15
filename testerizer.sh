@@ -150,6 +150,13 @@ psfasttest() { # $1 -> command   # $2 -> expected (.1 and .2 for both outputs wi
 	./copyed_project/push_swap $1 1> "$your.1" 2> "$your.2"
 	onediff "testfiles/$2" $your "TEST: push_swap $2 (NOTHING)"
 }
+pssorttest() { # $1 -> command   # $2/$3 -> count/shuffle
+	printf $color_def
+	#printf "testing $2...\n"
+	# running the command and output to rst files
+	./copyed_project/push_swap $1 | ./copyed_project/checker $1 1> "$your.1" 2> "$your.2"
+	onediff "testfiles/OK" $your "TEST: push_swap on $2 ints shuffled $3 times?"
+}
 
 
 
@@ -176,6 +183,7 @@ fasttest "testfiles/0_8_1.inst" "2147483647" "OK"
 fasttest "testfiles/0_8_1.inst" "-2147483648" "OK"
 fasttest "testfiles/rarra" "-2147483648 2147483647" "OK"
 fasttest "testfiles/pbpapa" "2147483647 -2147483648" "KO"
+fasttest "testfiles/example.inst" "$(cat testfiles/example.nums)" "OK"
 fasttest "testfiles/0_8_1.inst" "0 1 2 3 4 5 6 7" "KO"
 fasttest "testfiles/0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
 endtests
@@ -256,6 +264,16 @@ psfasttest "1 9 2 7 4 '-2 ' 3 5" "ERROR"
 psfasttest "1 9 2 7 4 873487357468265487265842562534 3 5" "ERROR"
 psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "ERROR"
 psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "ERROR"
+endtests
+
+begintests "'push_swap': Will-It Sort?'"
+for ((i = 2 ; i < 4096 ; i *= 2 ))
+do
+	for ((j = 2 ; j < 4096 ; j *= 2 ))
+	do
+		pssorttest "$(./generator 0 $i 1 $j)" $i $j
+	done
+done
 endtests
 
 printf $color_def
