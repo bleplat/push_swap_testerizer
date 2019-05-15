@@ -152,7 +152,23 @@ pssorttest() { # $1 -> command   # $2/$3 -> count/shuffle
 	onediff "testfiles/OK" $your "TEST: push_swap on $2 ints shuffled $3 times?"
 }
 
-
+# statistic tests
+psstatstests() {
+	N_MIN=$1
+	N_COUNT=$2
+	N_STEP=$3
+	N_SHUFFLE=$4
+	N_TESTS=$5
+	N_TITLE=$6
+	begintests "$6"
+	for ((i = 0 ; i < $N_TESTS ; i++ ))
+	do
+		./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE > tmp_nums
+		./copyed_project/push_swap $(cat tmp_nums) 1> $your.1 2> $your.2
+		onediff "testfiles/OK" $your "push_swap $$(./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE)"
+	done
+	endtests
+}
 
 #########################################
 ###              TESTS                ###
@@ -214,10 +230,10 @@ fasttest "testfiles/rarra" "1 9 2 7 4 -873487357468265487265842562534 3 5" "ERRO
 fasttest "testfiles/rarra" "1 9 2 7 4 873487357468265487265842562534b 3 5" "ERROR"
 fasttest "/dev/urandom" "$(./generator 0 8 35)" "ERROR"
 fasttest "/dev/random" "$(./generator 0 128 44 2)" "ERROR"
-fasttest "/dev/urandom" "$(./generator -3000 4096 16 3)" "ERROR"
-fasttest "/dev/random" "$(./generator -3000 4096 44444 4)" "ERROR"
-fasttest "/dev/zero" "$(./generator -3000 4096 15 5)" "ERROR"
-fasttest "/dev/urandom" "$(./generator -3000 4096 -35 9)" "ERROR"
+fasttest "/dev/urandom" "$(./generator -3000 2048 16 3)" "ERROR"
+fasttest "/dev/random" "$(./generator -3000 2048 44444 4)" "ERROR"
+fasttest "/dev/zero" "$(./generator -3000 1024 15 5)" "ERROR"
+fasttest "/dev/urandom" "$(./generator -3000 1024 -35 9)" "ERROR"
 endtests
 
 begintests "'checker': Loads tests"
@@ -271,6 +287,32 @@ do
 		pssorttest "$(./generator 0 $i 1 $j)" $i $j
 	done
 done
+endtests
+
+begintests "'push_swap': statistics"
+N_TESTS=32
+# small arrays
+psstatstests 0 2 1 -1 $N_TESTS "FULLY SHUFFLED / 2 ints"
+psstatstests 0 3 1 -1 $N_TESTS "FULLY SHUFFLED / 3 ints"
+psstatstests 0 10 1 -1 $N_TESTS "FULLY SHUFFLED / 10 ints"
+psstatstests 0 12 1 -1 $N_TESTS "FULLY SHUFFLED / 12 ints"
+psstatstests 0 50 1 -1 $N_TESTS "FULLY SHUFFLED / 50 ints"
+psstatstests -4 50 3 -1 $N_TESTS "FULLY SHUFFLED UNREGULAR / 50 ints"
+# medium arrays (interestings, so, with advanced tests)
+psstatstests 0 100 1 -1 $N_TESTS "FULLY SHUFFLED / 100 ints"
+psstatstests 0 100 1 10 $N_TESTS "ALMOST SORTED / 100 ints"
+psstatstests 99 100 -1 0 $N_TESTS "REVERSED / 100 ints"
+psstatstests 99 100 -1 10 $N_TESTS "ALMOST REVERSED / 100 ints"
+psstatstests 0 500 1 -1 $N_TESTS "FULLY SHUFFLED / 500 ints"
+psstatstests 0 500 1 10 $N_TESTS "ALMOST SORTED / 500 ints"
+psstatstests 499 500 -1 0 $N_TESTS "REVERSED / 500 ints"
+psstatstests 499 500 -1 10 $N_TESTS "ALMOST REVERSED / 500 ints"
+# big arrays
+psstatstests 0 1000 1 -1 $N_TESTS "FULLY SHUFFLED / 1000 ints"
+psstatstests 0 2000 1 -1 $N_TESTS "FULLY SHUFFLED / 2000 ints"
+psstatstests 0 4000 1 -1 $N_TESTS "FULLY SHUFFLED / 4000 ints"
+psstatstests 0 4000 1 4 $N_TESTS "4 SWAPS / 4000 ints"
+psstatstests 0 4000 1 16 $N_TESTS "16 SWAPS / 4000 ints"
 endtests
 
 printf $color_def
