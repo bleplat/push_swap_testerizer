@@ -27,7 +27,7 @@ color_ko2="\e[91m"
 function abort_testing
 {
 	printf $color_ko
-	printf "Aborting testing for the folowing reason:\n\t%s\n" $1
+	printf "Aborting testing for the folowing reason:\n\t%s\n" "$1"
 	return 1
 }
 
