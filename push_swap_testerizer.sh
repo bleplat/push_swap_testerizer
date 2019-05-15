@@ -158,6 +158,13 @@ fasttest "pbpapa" "1 3 2" "KO"
 fasttest "pbpapa" "r g #" "ERROR"
 endtests
 
+begintests "Adavnced tests"
+fasttest "0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
+fasttest "0_8_1.inst" "0" "OK"
+fasttest "0_8_1.inst" "$(./generator 0 8 1)" "KO"
+
+endtests
+
 begintests "Load tests for 'checker'"
 fasttest "pbpapa" "$(./generator 1 10000 43)" "OK"
 fasttest "rarra" "$(./generator -3000 4096 35)" "OK"
