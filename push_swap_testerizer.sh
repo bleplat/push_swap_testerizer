@@ -140,8 +140,8 @@ fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for
 	printf $color_def
 	#printf "testing $2...\n"
 	# running the command and output to rst files
-	cat "testfiles/$1" | ./copyed_project/checker $2 1> "$your.1" 2> "$your.2"
-	onediff "testfiles/$3" $your "TEST: $2 $3"
+	cat "$1" | ./copyed_project/checker $2 1> "$your.1" 2> "$your.2"
+	onediff "testfiles/$3" $your "TEST: cat $3 | $2 ($3)"
 }
 
 
@@ -150,35 +150,45 @@ fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for
 ###              TESTS                ###
 #########################################
 
-begintests "Simple functional tests for 'checker'"
-fasttest "pbpapa" "1 2 3" "OK"
-fasttest "rarra" "$(cat testfiles/ordered10.in)" "OK"
-fasttest "pbpapa" "$(./generator 1 121 22)" "OK"
-fasttest "pbpapa" "1 3 2" "KO"
-fasttest "pbpapa" "r g #" "ERROR"
+begintests "'checker': Simple functional tests"
+fasttest "testfiles/pbpapa" "1 2 3" "OK"
+fasttest "testfiles/rarra" "$(cat testfiles/ordered10.in)" "OK"
+fasttest "testfiles/pbpapa" "$(./generator 1 121 22)" "OK"
+fasttest "testfiles/pbpapa" "1 3 2" "KO"
+fasttest "testfiles/pbpapa" "r g #" "ERROR"
 endtests
 
-begintests "Adavnced tests"
-fasttest "0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
-fasttest "0_8_1.inst" "0" "OK"
-fasttest "0_8_1.inst" "$(./generator 0 8 1)" "KO"
-
+begintests "'checker': Advanced tests"
+fasttest "testfiles/0_8_1.inst" "0" "OK"
+fasttest "testfiles/0_8_1.inst" "1" "OK"
+fasttest "testfiles/0_8_1.inst" "-1" "OK"
+fasttest "testfiles/0_8_1.inst" "2147483647" "OK"
+fasttest "testfiles/0_8_1.inst" "-2147483648" "OK"
+fasttest "testfiles/rarra" "-2147483648 2147483647" "OK"
+fasttest "testfiles/pbpapa" "2147483647 -2147483648" "KO"
+fasttest "testfiles/0_8_1.inst" "0 1 2 3 4 5 6 7" "KO"
+fasttest "testfiles/0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
 endtests
 
-begintests "Load tests for 'checker'"
-fasttest "pbpapa" "$(./generator 1 10000 43)" "OK"
-fasttest "rarra" "$(./generator -3000 4096 35)" "OK"
-fasttest "pbpapa" "$(./generator -2 4096 -43)" "KO"
-fasttest "rarra" "$(./generator 5 10000 -1)" "KO"
-fasttest "rarra" "$(./generator 4783749 7000 -34455344)" "KO"
-fasttest "pbpapa" "$(./generator 5 3000 -1) A" "ERROR"
-fasttest "random1338.inst" "$(./generator -9999 2000 999)" "KO"
-fasttest "random1338.inst" "$(./generator 128 10000 2)" "KO"
-fasttest "random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
-fasttest "../../../../../../../../../../../dev/urandom" "$(./generator -3000 4096 35)" "ERROR"
-fasttest "../../../../../../../../../../../dev/random" "$(./generator -3000 4096 44444)" "ERROR"
-fasttest "../../../../../../../../../../../dev/zero" "$(./generator -3000 4096 15)" "ERROR"
-fasttest "../../../../../../../../../../../dev/urandom" "$(./generator -3000 4096 -35)" "ERROR"
+begintests "'checker': Error handling tests"
+fasttest "/dev/urandom" "$(./generator 0 8 35)" "ERROR"
+fasttest "/dev/random" "$(./generator 0 128 44 2)" "ERROR"
+fasttest "/dev/urandom" "$(./generator -3000 4096 16 3)" "ERROR"
+fasttest "/dev/random" "$(./generator -3000 4096 44444 4)" "ERROR"
+fasttest "/dev/zero" "$(./generator -3000 4096 15 5)" "ERROR"
+fasttest "/dev/urandom" "$(./generator -3000 4096 -35 9)" "ERROR"
+endtests
+
+begintests "'checker': Loads tests"
+fasttest "testfiles/pbpapa" "$(./generator 1 10000 43)" "OK"
+fasttest "testfiles/rarra" "$(./generator -3000 4096 35)" "OK"
+fasttest "testfiles/pbpapa" "$(./generator -2 4096 -43)" "KO"
+fasttest "testfiles/rarra" "$(./generator 5 10000 -1)" "KO"
+fasttest "testfiles/rarra" "$(./generator 4783749 7000 -34455344)" "KO"
+fasttest "testfiles/pbpapa" "$(./generator 5 3000 -1) A" "ERROR"
+fasttest "testfiles/random1338.inst" "$(./generator -9999 2000 999)" "KO"
+fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2)" "KO"
+fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
 endtests
 
 printf $color_def
