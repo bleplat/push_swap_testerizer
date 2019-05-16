@@ -6,7 +6,7 @@
 #    By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/16 02:39:51 by bleplat          ###   ########.fr        #
+#    Updated: 2019/05/16 16:24:19 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ####################
 
 # PATH TO YOUR PROJET, WITHOUT AN ENDING '/':
-TESTED_DIR = ../julsy
+TESTED_DIR = ../try0
 
 
 
@@ -35,7 +35,7 @@ CP_DIR = copyed_project
 CFLAGS = -Wall -Wextra $(INCLUDES)
 LDFLAGS = -L libft -lft
 
-.PHONY:all
+.PHONY: all
 all: makeproject $(NAME)
 	@printf "\e[36mReady to run testerizer.sh!\e[31m\n\n"
 

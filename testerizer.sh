@@ -1,5 +1,6 @@
 # /bin/sh
 trap "exit" QUIT
+trap "return 44" INT
 
 ################################################################
 ### WARNING
@@ -7,8 +8,7 @@ trap "exit" QUIT
 ### Dont change things here, there is no config!
 ####################################################################
 
-
-execmd="./copyed_project/fillit"
+execmd="./copyed_project/checker####LEGACY"
 
 diffttl=test_results
 
@@ -26,8 +26,7 @@ color_ko2="\e[91m"
 #########################
 
 # Abort testing on problems
-function abort_testing
-{
+function abort_testing {
 	printf $color_ko
 	printf "Aborting testing for the folowing reason:\n\t%s\n" "$1"
 	#exit 1
@@ -41,17 +40,25 @@ then
 fi
 
 # Importing the project (copy to copyed_project directory)
-make import
-if [ $? -ne 0 ]; then abort_testing "Failed to copy project. Please verify the path configured in the makefile."; fi
+function try_import {
+	make import
+	if [ $? -ne 0 ]; then abort_testing "Failed to copy project. Please verify the path configured in the makefile."; fi
+}
+try_import
 
 # Running norminette
-make norminette
-if [ $? -ne 0 ]; then abort_testing "Norm error possible, please verify."; fi
+function try_norminette {
+	make norminette
+	if [ $? -ne 0 ]; then abort_testing "Norm error possible, please verify."; fi
+}
+try_norminette
 
 # Stressing the make a little
-make makeproject
-if [ $? -ne 0 ]; then abort_testing "Error occured durring project making, please verify."; fi
-
+function try_makeproject {
+	make makeproject
+	if [ $? -ne 0 ]; then abort_testing "Error occured durring project making, please verify."; fi
+}
+try_makeproject
 
 
 #########################
@@ -142,7 +149,7 @@ filetest() { # $1 -> file_name
 fasttest() { # $1 -> file_in   # $2 -> command   # $3 -> expected (.1 and .2 for both outputs will be append)
 	printf $color_def
 	cat "$1" | ./copyed_project/checker $2 1> "$your.1" 2> "$your.2"
-	onediff "testfiles/$3" $your "TEST: cat $3 | checker $2 ($3)"
+	onediff "testfiles/$3" $your "TEST: cat $1 | checker $2 ($3)"
 }
 psfasttest() { # $1 -> command   # $2 -> expected (.1 and .2 for both outputs will be append)
 	printf $color_def
@@ -199,8 +206,6 @@ psstatstests() {
 ###              TESTS                ###
 #########################################
 
-trap "return 1" INT
-
 begintests "'checker': Simple functional tests"
 fasttest "testfiles/pbpapa" "1 2 3" "OK"
 fasttest "testfiles/rarra" "$(cat testfiles/ordered10.in)" "OK"
@@ -228,6 +233,7 @@ fasttest "testfiles/pbpapa" "2147483647 -2147483648" "KO"
 fasttest "testfiles/example.inst" "$(cat testfiles/example.nums)" "OK"
 fasttest "testfiles/0_8_1.inst" "0 1 2 3 4 5 6 7" "KO"
 fasttest "testfiles/0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
+fasttest "testfiles/empty" "" "OK"
 endtests
 
 begintests "'checker': Error handling tests"
@@ -282,7 +288,7 @@ fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "Error"
 endtests
 
-begintests "'push_swap': Basic tests"
+begintests "'push_swap': Already sorted"
 psfasttest "" "NOTHING"
 psfasttest "0" "NOTHING"
 psfasttest "0 1" "NOTHING"
@@ -358,5 +364,5 @@ printf $color_def
 printf "ALL TESTS DONE!\n"
 printf "$color_ok\tSUCCESS: $okttl / `expr $okttl + $kottl`\n"
 printf "$color_ko\tFAILS: $kottl / `expr $okttl + $kottl`\n"
-printf "\e[33mWARNING! Displayed time may be inaccurate! \nWARNING! This version is not finished and may contains bugs\nTake caution with false positives\n"
+printf "\e[33mWARNING! This version is not finished and may contains bugs\nAlway investigate when a test fail!\n"
 rm tmp_*
