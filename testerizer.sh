@@ -1,10 +1,12 @@
 # /bin/sh
+trap "exit" QUIT
 
 ################################################################
 ### WARNING
 ### Dont forget to change the path to your project in the Makefile!
 ### Dont change things here, there is no config!
 ####################################################################
+
 
 execmd="./copyed_project/fillit"
 
@@ -28,11 +30,8 @@ function abort_testing
 {
 	printf $color_ko
 	printf "Aborting testing for the folowing reason:\n\t%s\n" "$1"
-	return 1
+	#exit 1
 }
-
-# Make generator
-make generator
 
 # Argument 're' can re-build project
 if [ $1 = "re" ]
@@ -59,6 +58,10 @@ if [ $? -ne 0 ]; then abort_testing "Error occured durring project making, pleas
 ###       TOOLS       ###
 #########################
 
+# Make generator
+printf "making generator...\n"
+make generator
+
 # Beautifulllll message
 printf $color_def
 printf "\e[1mpush_swap_\e[34mt\e[35me\e[36ms\e[37mt\e[35m\e[31me\e[32mr\e[33mi\e[34mz\e[35me\e[36mr\e[35m\n\n\e[0m"
@@ -79,7 +82,7 @@ gotko() {
 # DISPLAY TEST CATEGORY TITLE / END OF CATEGORY
 begintests() { # $1 Title
 	printf $color_def
-	printf "$1\n"
+	printf "\n$1\n"
 }
 endtests() {
 	printf $color_def
@@ -158,29 +161,33 @@ psstatstests() {
 	N_COUNT=$2
 	N_STEP=$3
 	N_SHUFFLE=$4
-	N_TESTS=$5
+	N_TEST=$5
 	N_TITLE=$6
 	begintests "$N_TITLE"
 	rm -f tmp_stats
 	tests=0
 	min=2147483647
 	max=-1
-	for ((i = 0 ; i < $N_TESTS ; i++ ))
+	for ((i = 0 ; i < $N_TEST ; i++ ))
 	do
 		./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE > tmp_nums
 		./copyed_project/push_swap $(cat tmp_nums) 1> tmp_inst.1 2> tmp_inst.2
-		cat tmp_inst.1 | ./copyed_project $(cat tmp_nums) 1> $your.1 2> $your.2
+		cat tmp_inst.1 | ./copyed_project/checker $(cat tmp_nums) 1> $your.1 2> $your.2
 		onediff "testfiles/OK" $your "push_swap $$(./generator $N_MIN $N_COUNT $N_STEP $N_SHUFFLE)"
 		if [[ "$(cat $your.1)" == OK* ]]; then
-			tests = `expr $tests + 1`
-			instrs=$(wc -l $your)
-			echo $instrs >> tmp_stats
+			tests=`expr $tests + 1`
+			instrs=$(wc -l tmp_inst.1 | awk '{print $1}')
+			echo "$instrs" >> tmp_stats
 		fi
 	done
 	if [ $tests -gt 0 ]; then
 		sort -n -o tmp_stats tmp_stats
-		printf "\n%d (MIN) <= you <= %d (MAX)" $(sed '0q;d' tmp_stats) $(sed "`expr $tests - 1`q;d" tmp_stats)
-		printf "\n|--- %d [=== %d ===] %d ---|" $(sed "`expr $tests * 0.25`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr $tests * 0.75`q;d" tmp_stats)
+		printf "\n"
+		printf "MIN: %d " $(sed '1q;d' tmp_stats)
+		if [ $tests -gt 3 ]; then
+			printf "|--- %d [=== %d ===] %d ---| " $(sed "`expr $tests / 4`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr \( $tests \* 3 \) / 4`q;d" tmp_stats)
+		fi
+		printf "MAX: %d" $(sed "`expr $tests`q;d" tmp_stats)
 	fi
 	endtests
 }
@@ -189,17 +196,21 @@ psstatstests() {
 ###              TESTS                ###
 #########################################
 
+trap "return 1" INT
+
 begintests "'checker': Simple functional tests"
 fasttest "testfiles/pbpapa" "1 2 3" "OK"
 fasttest "testfiles/rarra" "$(cat testfiles/ordered10.in)" "OK"
 fasttest "testfiles/pbpapa" "$(./generator 1 121 22)" "OK"
 fasttest "testfiles/pbpapa" "1 3 2" "KO"
-fasttest "testfiles/pbpapa" "r g #" "ERROR"
+fasttest "testfiles/pbpapa" "r g #" "Error"
 endtests
 
 begintests "'checker': Advanced tests"
 fasttest "testfiles/empty" "0" "OK"
 fasttest "testfiles/empty" "0 1 2" "OK"
+fasttest "testfiles/empty" "-5 -4 -3" "OK"
+fasttest "testfiles/empty" "-7374 -4324 -33" "OK"
 fasttest "testfiles/empty" "4 6 7" "OK"
 fasttest "testfiles/pb" "4 6 7" "KO"
 fasttest "testfiles/pbpbpb" "4 6 7" "KO"
@@ -217,38 +228,43 @@ fasttest "testfiles/0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
 endtests
 
 begintests "'checker': Error handling tests"
-fasttest "testfiles/empty" "1 u 5" "ERROR"
-fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1" "ERROR"
-fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1 2" "ERROR"
-fasttest "testfiles/rarra" "3 $(./generator 0 100 1 1) 3" "ERROR"
-fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 3 3 3" "ERROR"
-fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 99" "ERROR"
-fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 0" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 +-8 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -+8 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 ++8 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 --8 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -8+ 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 8+ 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -8- 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 +8- 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -8v 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 +- 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 + 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 - 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -+ 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 '' 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 ' ' 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 '-2 ' 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 873487357468265487265842562534 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 -873487357468265487265842562534 3 5" "ERROR"
-fasttest "testfiles/rarra" "1 9 2 7 4 873487357468265487265842562534b 3 5" "ERROR"
-fasttest "/dev/urandom" "$(./generator 0 8 35)" "ERROR"
-fasttest "/dev/random" "$(./generator 0 128 44 2)" "ERROR"
-fasttest "/dev/urandom" "$(./generator -3000 2048 16 3)" "ERROR"
-fasttest "/dev/random" "$(./generator -3000 2048 44444 4)" "ERROR"
-fasttest "/dev/zero" "$(./generator -3000 1024 15 5)" "ERROR"
-fasttest "/dev/urandom" "$(./generator -3000 1024 -35 9)" "ERROR"
+fasttest "testfiles/empty" "1 u 5" "Error"
+fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1" "Error"
+fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1 2" "Error"
+fasttest "testfiles/rarra" "3 $(./generator 0 100 1 1) 3" "Error"
+fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 3 3 3" "Error"
+fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 99" "Error"
+fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 0" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 +-8 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -+8 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 ++8 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 --8 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -8+ 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 8+ 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -8- 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 +8- 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -8v 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 +- 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 + 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 - 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -+ 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 '' 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 ' ' 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 '-2 ' 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 873487357468265487265842562534 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 -873487357468265487265842562534 3 5" "Error"
+fasttest "testfiles/rarra" "1 9 2 7 4 873487357468265487265842562534b 3 5" "Error"
+fasttest "/dev/urandom" "$(./generator 0 8 35)" "Error"
+fasttest "/dev/random" "$(./generator 0 128 44 2)" "Error"
+fasttest "/dev/urandom" "$(./generator -3000 2048 16 3)" "Error"
+fasttest "/dev/random" "$(./generator -3000 2048 44444 4)" "Error"
+fasttest "/dev/zero" "$(./generator -3000 1024 15 5)" "Error"
+fasttest "/dev/urandom" "$(./generator -3000 1024 -35 9)" "Error"
+fasttest "testfiles/invalid1.inst" "1 9 2 5" "Error"
+fasttest "testfiles/invalid2.inst" "1 9 2 7" "Error"
+fasttest "testfiles/invalid2.inst" "0" "Error"
+fasttest "testfiles/invalid3.inst" "2 7 4 6" "Error"
+fasttest "testfiles/invalid4.inst" "2 7 4 6" "Error"
 endtests
 
 begintests "'checker': Loads tests"
@@ -257,10 +273,10 @@ fasttest "testfiles/rarra" "$(./generator -3000 4096 35)" "OK"
 fasttest "testfiles/pbpapa" "$(./generator -2 4096 -43)" "KO"
 fasttest "testfiles/rarra" "$(./generator 5 10000 -1)" "KO"
 fasttest "testfiles/rarra" "$(./generator 4783749 7000 -34455344)" "KO"
-fasttest "testfiles/pbpapa" "$(./generator 5 3000 -1) A" "ERROR"
+fasttest "testfiles/pbpapa" "$(./generator 5 3000 -1) A" "Error"
 fasttest "testfiles/random1338.inst" "$(./generator -9999 2000 999)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2)" "KO"
-fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "ERROR"
+fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "Error"
 endtests
 
 begintests "'push_swap': Basic tests"
@@ -273,31 +289,31 @@ psfasttest "1 2 3" "NOTHING"
 endtests
 
 begintests "'push_swap': Error handling tests"
-psfasttest "1 9 2 7 4 +-8 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -+8 3 5" "ERROR"
-psfasttest "1 9 2 7 4 ++8 3 5" "ERROR"
-psfasttest "1 9 2 7 4 --8 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -8+ 3 5" "ERROR"
-psfasttest "1 9 2 7 4 8+ 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -8- 3 5" "ERROR"
-psfasttest "1 9 2 7 4 +8- 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -8v 3 5" "ERROR"
-psfasttest "1 9 2 7 4 +- 3 5" "ERROR"
-psfasttest "1 9 2 7 4 + 3 5" "ERROR"
-psfasttest "1 9 2 7 4 - 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -+ 3 5" "ERROR"
-psfasttest "1 9 2 7 4 '' 3 5" "ERROR"
-psfasttest "1 9 2 7 4 ' ' 3 5" "ERROR"
-psfasttest "1 9 2 7 4 '-2 ' 3 5" "ERROR"
-psfasttest "1 9 2 7 4 873487357468265487265842562534 3 5" "ERROR"
-psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "ERROR"
-psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "ERROR"
+psfasttest "1 9 2 7 4 +-8 3 5" "Error"
+psfasttest "1 9 2 7 4 -+8 3 5" "Error"
+psfasttest "1 9 2 7 4 ++8 3 5" "Error"
+psfasttest "1 9 2 7 4 --8 3 5" "Error"
+psfasttest "1 9 2 7 4 -8+ 3 5" "Error"
+psfasttest "1 9 2 7 4 8+ 3 5" "Error"
+psfasttest "1 9 2 7 4 -8- 3 5" "Error"
+psfasttest "1 9 2 7 4 +8- 3 5" "Error"
+psfasttest "1 9 2 7 4 -8v 3 5" "Error"
+psfasttest "1 9 2 7 4 +- 3 5" "Error"
+psfasttest "1 9 2 7 4 + 3 5" "Error"
+psfasttest "1 9 2 7 4 - 3 5" "Error"
+psfasttest "1 9 2 7 4 -+ 3 5" "Error"
+psfasttest "1 9 2 7 4 '' 3 5" "Error"
+psfasttest "1 9 2 7 4 ' ' 3 5" "Error"
+psfasttest "1 9 2 7 4 '-2 ' 3 5" "Error"
+psfasttest "1 9 2 7 4 873487357468265487265842562534 3 5" "Error"
+psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "Error"
+psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "Error"
 endtests
 
-begintests "'push_swap': Will-It Sort?'"
-for ((i = 2 ; i < 4096 ; i *= 2 ))
+begintests "'push_swap': Regular sorting'"
+for ((i = 2 ; i < 1024 ; i *= 2 ))
 do
-	for ((j = 2 ; j < 4096 ; j *= 2 ))
+	for ((j = 2 ; j < 1024 ; j *= 2 ))
 	do
 		pssorttest "$(./generator 0 $i 1 $j)" $i $j
 	done
@@ -307,27 +323,32 @@ endtests
 begintests "'push_swap': statistics"
 N_TESTS=32
 # small arrays
-psstatstests 0 2 1 -1 $N_TESTS "FULLY SHUFFLED / 2 ints"
-psstatstests 0 3 1 -1 $N_TESTS "FULLY SHUFFLED / 3 ints"
-psstatstests 0 10 1 -1 $N_TESTS "FULLY SHUFFLED / 10 ints"
-psstatstests 0 12 1 -1 $N_TESTS "FULLY SHUFFLED / 12 ints"
-psstatstests 0 50 1 -1 $N_TESTS "FULLY SHUFFLED / 50 ints"
-psstatstests -4 50 3 -1 $N_TESTS "FULLY SHUFFLED UNREGULAR / 50 ints"
+psstatstests 0 2 1 -1 8 "2 ints: FULLY SHUFFLED"
+psstatstests 0 3 1 -1 8 "3 ints: FULLY SHUFFLED"
+psstatstests 0 5 1 -1 $N_TESTS "5 ints: FULLY SHUFFLED"
+psstatstests 4 5 -1 0 1 "5 ints: REVERSED"
+psstatstests -4 5 3 -1 $N_TESTS "5 ints: FULLY SHUFFLED UNREGULAR"
+psstatstests 0 12 1 -1 $N_TESTS "12 ints: FULLY SHUFFLED"
+psstatstests 0 50 1 -1 $N_TESTS "50 ints: FULLY SHUFFLED"
+psstatstests -4 50 3 -1 $N_TESTS "50 ints: FULLY SHUFFLED UNREGULAR"
+psstatstests -4 50 3 1 $N_TESTS "50 ints: 1 SWAP UNREGULAR"
 # medium arrays (interestings, so, with advanced tests)
-psstatstests 0 100 1 -1 $N_TESTS "FULLY SHUFFLED / 100 ints"
-psstatstests 0 100 1 10 $N_TESTS "ALMOST SORTED / 100 ints"
-psstatstests 99 100 -1 0 $N_TESTS "REVERSED / 100 ints"
-psstatstests 99 100 -1 10 $N_TESTS "ALMOST REVERSED / 100 ints"
-psstatstests 0 500 1 -1 $N_TESTS "FULLY SHUFFLED / 500 ints"
-psstatstests 0 500 1 10 $N_TESTS "ALMOST SORTED / 500 ints"
-psstatstests 499 500 -1 0 $N_TESTS "REVERSED / 500 ints"
-psstatstests 499 500 -1 10 $N_TESTS "ALMOST REVERSED / 500 ints"
-# big arrays
-psstatstests 0 1000 1 -1 $N_TESTS "FULLY SHUFFLED / 1000 ints"
-psstatstests 0 2000 1 -1 $N_TESTS "FULLY SHUFFLED / 2000 ints"
-psstatstests 0 4000 1 -1 $N_TESTS "FULLY SHUFFLED / 4000 ints"
-psstatstests 0 4000 1 4 $N_TESTS "4 SWAPS / 4000 ints"
-psstatstests 0 4000 1 16 $N_TESTS "16 SWAPS / 4000 ints"
+psstatstests 0 100 1 -1 $N_TESTS "100 ints: FULLY SHUFFLED"
+psstatstests 0 100 1 10 $N_TESTS "100 ints: ALMOST SORTED"
+psstatstests 99 100 -1 0 1 "100 ints: REVERSED"
+psstatstests 99 100 -1 10 $N_TESTS "100 ints: ALMOST REVERSED"
+psstatstests -4 100 3 -1 $N_TESTS "100 ints: FULLY SHUFFLED UNREGULAR"
+psstatstests -4 100 3 10 $N_TESTS "100 ints: 10 SWAPS UNREGULAR"
+psstatstests 0 500 1 -1 $N_TESTS "500 ints: FULLY SHUFFLED"
+psstatstests 0 500 1 10 $N_TESTS "500 ints: ALMOST SORTED"
+psstatstests 499 500 -1 0 1 "500 ints: REVERSED"
+psstatstests 499 500 -1 10 $N_TESTS "500 ints: ALMOST REVERSED"
+psstatstests -4 500 3 -1 $N_TESTS "500 ints: FULLY SHUFFLED UNREGULAR"
+# big arrays (innaccurate tests, just to see speed difference)
+psstatstests 0 1000 1 4 4 "1000 ints: 1 SWAP"
+psstatstests 0 1000 1 4 4 "1000 ints: 4 SWAPS"
+psstatstests 0 1000 1 16 4 "1000 ints: 16 SWAPS"
+psstatstests 0 1000 1 -1 4 "1000 ints: FULLY SHUFFLED"
 endtests
 
 printf $color_def
