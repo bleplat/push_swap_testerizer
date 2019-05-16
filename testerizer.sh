@@ -45,7 +45,7 @@ make import
 if [ $? -ne 0 ]; then abort_testing "Failed to copy project. Please verify the path configured in the makefile."; fi
 
 # Running norminette
-#make norminette
+make norminette
 if [ $? -ne 0 ]; then abort_testing "Norm error possible, please verify."; fi
 
 # Stressing the make a little
