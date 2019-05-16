@@ -183,6 +183,9 @@ psstatstests() {
 	if [ $tests -gt 0 ]; then
 		sort -n -o tmp_stats tmp_stats
 		printf "\n"
+		if [ $tests -ne $N_TEST ]; then
+			printf $color_ko2
+		fi
 		printf "MIN: %d " $(sed '1q;d' tmp_stats)
 		if [ $tests -gt 3 ]; then
 			printf "|--- %d [=== %d ===] %d ---| " $(sed "`expr $tests / 4`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr \( $tests \* 3 \) / 4`q;d" tmp_stats)
@@ -310,7 +313,7 @@ psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "Error"
 psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "Error"
 endtests
 
-begintests "'push_swap': Regular sorting'"
+begintests "'push_swap': Regular sorting"
 for ((i = 2 ; i < 1024 ; i *= 2 ))
 do
 	for ((j = 2 ; j < 1024 ; j *= 2 ))
