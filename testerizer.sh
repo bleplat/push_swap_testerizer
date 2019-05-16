@@ -372,6 +372,7 @@ psstatstests 0 500 1 10 $N_TESTS "500 ints: ALMOST SORTED"
 psstatstests 499 500 -1 0 1 "500 ints: REVERSED"
 psstatstests 0 500 1 r20 1 "500 ints: 20 ROTATIONS"
 psstatstests 0 500 1 r-20 1 "500 ints: 20 ROTATIONS INVERTED"
+psstatstests 499 500 -1 r-20 1 "500 ints: 20 ROTATIONS INVERTED REVERSED"
 psstatstests 499 500 -1 10 $N_TESTS "500 ints: ALMOST REVERSED"
 psstatstests -4 500 3 -1 $N_TESTS "500 ints: FULLY SHUFFLED UNREGULAR"
 # big arrays (innaccurate tests, just to see speed difference)
