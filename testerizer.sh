@@ -28,8 +28,21 @@ color_ko2="\e[91m"
 # Abort testing on problems
 function abort_testing {
 	printf $color_ko
-	printf "Aborting testing for the folowing reason:\n\t%s\n" "$1"
-	#exit 1
+	printf "You may abort testing for the folowing reason:\n\t%s\n" "$1"
+	printf "\r${color_def} continue in 6 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 5 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 4 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 3 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 2 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 1 seconds..."
+	sleep 1
+	printf "\r${color_def} continue in 0 seconds...\n"
+	return 1
 }
 
 # Argument 're' can re-build project
@@ -206,7 +219,7 @@ psstatstests() {
 ###              TESTS                ###
 #########################################
 
-begintests "'checker': Simple functional tests"
+begintests "'checker': Minimum"
 fasttest "testfiles/pbpapa" "1 2 3" "OK"
 fasttest "testfiles/rarra" "$(cat testfiles/ordered10.in)" "OK"
 fasttest "testfiles/pbpapa" "$(./generator 1 121 22)" "OK"
@@ -214,7 +227,7 @@ fasttest "testfiles/pbpapa" "1 3 2" "KO"
 fasttest "testfiles/pbpapa" "r g #" "Error"
 endtests
 
-begintests "'checker': Advanced tests"
+begintests "'checker': Advanced"
 fasttest "testfiles/empty" "0" "OK"
 fasttest "testfiles/empty" "0 1 2" "OK"
 fasttest "testfiles/empty" "-5 -4 -3" "OK"
@@ -236,7 +249,7 @@ fasttest "testfiles/0_8_1.inst" "$(cat testfiles/0_8_1.nums)" "OK"
 fasttest "testfiles/empty" "" "OK"
 endtests
 
-begintests "'checker': Error handling tests"
+begintests "'checker': Error handling"
 fasttest "testfiles/empty" "1 u 5" "Error"
 fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1" "Error"
 fasttest "testfiles/rarra" "$(./generator 0 100 1 1) 1 2" "Error"
@@ -276,7 +289,7 @@ fasttest "testfiles/invalid3.inst" "2 7 4 6" "Error"
 fasttest "testfiles/invalid4.inst" "2 7 4 6" "Error"
 endtests
 
-begintests "'checker': Loads tests"
+begintests "'checker': High Loads"
 fasttest "testfiles/pbpapa" "$(./generator 1 10000 43)" "OK"
 fasttest "testfiles/rarra" "$(./generator -3000 4096 35)" "OK"
 fasttest "testfiles/pbpapa" "$(./generator -2 4096 -43)" "KO"
@@ -286,6 +299,7 @@ fasttest "testfiles/pbpapa" "$(./generator 5 3000 -1) A" "Error"
 fasttest "testfiles/random1338.inst" "$(./generator -9999 2000 999)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "Error"
+fasttest "testfiles/lotsof_ra.inst" "1 2 3 4" "OK"
 endtests
 
 begintests "'push_swap': Already sorted"
@@ -364,5 +378,5 @@ printf $color_def
 printf "ALL TESTS DONE!\n"
 printf "$color_ok\tSUCCESS: $okttl / `expr $okttl + $kottl`\n"
 printf "$color_ko\tFAILS: $kottl / `expr $okttl + $kottl`\n"
-printf "\e[33mWARNING! This version is not finished and may contains bugs\nAlway investigate when a test fail!\n"
+printf "\e[33m/!\\WARNING! A failing test do not mean you are wrong! Alway investigate!\n"
 rm tmp_*
