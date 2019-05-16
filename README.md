@@ -8,4 +8,8 @@ This tests the 'checker', and the 'push_swap' runnables, then perform statistics
  - stop current test with CTRL+C, quit with CTRL+\
  - results are outputed to 'test_results' and 'test_stats' files
  - other .sh files are used by testerizer.sh and the makefile, you are not expected to use those.
+## Disclaimer
+ - Failing tests does not mean you are wrong, you should inverstigate.
+ - This tester does not test everything. It is not enough for an evaluation.
+ - Im currently working on this tester.
 *PROJECT READY, BUT NOT FULLY VERIFIED*
