@@ -291,15 +291,17 @@ endtests
 
 begintests "'checker': High Loads"
 fasttest "testfiles/pbpapa" "$(./generator 1 10000 43)" "OK"
-fasttest "testfiles/rarra" "$(./generator -3000 4096 35)" "OK"
-fasttest "testfiles/pbpapa" "$(./generator -2 4096 -43)" "KO"
+fasttest "testfiles/rarra" "$(./generator -3000 5000 35)" "OK"
+fasttest "testfiles/pbpapa" "$(./generator -2 5000 -43)" "KO"
 fasttest "testfiles/rarra" "$(./generator 5 10000 -1)" "KO"
 fasttest "testfiles/rarra" "$(./generator 4783749 7000 -34455344)" "KO"
 fasttest "testfiles/pbpapa" "$(./generator 5 3000 -1) A" "Error"
-fasttest "testfiles/random1338.inst" "$(./generator -9999 2000 999)" "KO"
+fasttest "testfiles/random1338.inst" "$(./generator -9999 5000 999)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2)" "KO"
 fasttest "testfiles/random1338.inst" "$(./generator 128 10000 2) c" "Error"
+fasttest "testfiles/lotsof_ra.inst" "1 2" "OK"
 fasttest "testfiles/lotsof_ra.inst" "1 2 3 4" "OK"
+fasttest "testfiles/lotsof_ra.inst" "-4 -3 -2 -1" "OK"
 endtests
 
 begintests "'push_swap': Already sorted"
@@ -311,7 +313,7 @@ psfasttest "-1 0 1" "NOTHING"
 psfasttest "1 2 3" "NOTHING"
 endtests
 
-begintests "'push_swap': Error handling tests"
+begintests "'push_swap': Error handling"
 psfasttest "1 9 2 7 4 +-8 3 5" "Error"
 psfasttest "1 9 2 7 4 -+8 3 5" "Error"
 psfasttest "1 9 2 7 4 ++8 3 5" "Error"
