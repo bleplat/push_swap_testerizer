@@ -46,7 +46,7 @@ function abort_testing {
 }
 
 # Argument 're' can re-build project
-if [ $1 = "re" ]
+if [ "$1" = "re" ]
 then
 	printf $color_def
 	make fclean
@@ -206,11 +206,12 @@ psstatstests() {
 		if [ $tests -ne $N_TEST ]; then
 			printf $color_ko2
 		fi
-		printf "MIN: %d " $(sed '1q;d' tmp_stats)
+		printf "MIN: %-4d\t" $(sed '1q;d' tmp_stats)
 		if [ $tests -gt 3 ]; then
-			printf "|--- %d [=== %d ===] %d ---| " $(sed "`expr $tests / 4`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr \( $tests \* 3 \) / 4`q;d" tmp_stats)
+			printf "|--- %d [=== %d ===] %d ---|\t" $(sed "`expr $tests / 4`q;d" tmp_stats) $(sed "`expr $tests / 2`q;d" tmp_stats) $(sed "`expr \( $tests \* 3 \) / 4`q;d" tmp_stats)
 		fi
-		printf "MAX: %d" $(sed "`expr $tests`q;d" tmp_stats)
+		printf "MAX: %-4d\t" $(sed "`expr $tests`q;d" tmp_stats)
+		printf "MOY: %-4d\t" `expr $(awk '{ sum += $1 } END { print sum }' tmp_stats) / $tests`
 	fi
 	endtests
 }
