@@ -288,7 +288,7 @@ fasttest "testfiles/invalid2.inst" "1 9 2 7" "Error"
 fasttest "testfiles/invalid2.inst" "0" "Error"
 fasttest "testfiles/invalid3.inst" "2 7 4 6" "Error"
 fasttest "testfiles/invalid4.inst" "2 7 4 6" "Error"
-fasttest "testfiles/sa_nonl" "1 0 2 3 4 5 6 7" "Error"
+fasttest "testfiles/sa_nonl.inst" "1 0 2 3 4 5 6 7" "Error"
 endtests
 
 begintests "'checker': High Loads"

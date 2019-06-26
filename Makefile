@@ -6,7 +6,7 @@
 #    By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/16 16:24:19 by bleplat          ###   ########.fr        #
+#    Updated: 2019/05/20 16:42:58 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ####################
 
 # PATH TO YOUR PROJET, WITHOUT AN ENDING '/':
-TESTED_DIR = ../try0
+TESTED_DIR = ../cfat
 
 
 
