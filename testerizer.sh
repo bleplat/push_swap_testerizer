@@ -79,6 +79,7 @@ try_makeproject
 #########################
 
 # Make generator
+printf $color_def
 printf "making generator...\n"
 make generator
 
@@ -312,11 +313,11 @@ psfasttest "0" "NOTHING"
 psfasttest "0 1" "NOTHING"
 psfasttest "0 1 2" "NOTHING"
 psfasttest "-1 0 1" "NOTHING"
-psfasttest "1 2 3" "NOTHING"
+psfasttest "-9 -8 -6" "NOTHING"
+psfasttest "33 44 55" "NOTHING"
 endtests
 
 begintests "'push_swap': Error handling"
-psfasttest "1 9 2 7 4 +-8 3 5" "Error"
 psfasttest "1 9 2 7 4 -+8 3 5" "Error"
 psfasttest "1 9 2 7 4 ++8 3 5" "Error"
 psfasttest "1 9 2 7 4 --8 3 5" "Error"
@@ -335,12 +336,34 @@ psfasttest "1 9 2 7 4 '-2 ' 3 5" "Error"
 psfasttest "1 9 2 7 4 873487357468265487265842562534 3 5" "Error"
 psfasttest "1 9 2 7 4 -873487357468265487265842562534 3 5" "Error"
 psfasttest "1 9 2 7 4 873487357468265487265842562534b 3 5" "Error"
+psfasttest "1 9 2 7 4 8 3 2147483648" "Error"
+psfasttest "1 9 2 7 4 8 3 -2147483649" "Error"
 endtests
 
 begintests "'push_swap': Regular sorting"
 for ((i = 2 ; i < 1024 ; i *= 2 ))
 do
 	for ((j = 2 ; j < 1024 ; j *= 2 ))
+	do
+		pssorttest "$(./generator 0 $i 1 $j)" $i $j
+	done
+done
+endtests
+
+begintests "'push_swap': Regular sorting with negatives"
+for ((i = 2 ; i < 1024 ; i *= 3 ))
+do
+	for ((j = 2 ; j < 1024 ; j *= 3 ))
+	do
+		pssorttest "$(./generator 0 $i -1 $j)" $i $j
+	done
+done
+endtests
+
+begintests "'push_swap': Inverted sorting"
+for ((i = 2 ; i < 256 ; i *= 2 ))
+do
+	for ((j = 2 ; j < 256 ; j *= 2 ))
 	do
 		pssorttest "$(./generator 0 $i 1 $j)" $i $j
 	done
@@ -363,6 +386,7 @@ psstatstests -4 50 3 1 $N_TESTS "50 ints: 1 SWAP UNREGULAR"
 psstatstests 0 100 1 -1 $N_TESTS "100 ints: FULLY SHUFFLED"
 psstatstests 0 100 1 10 $N_TESTS "100 ints: ALMOST SORTED"
 psstatstests 99 100 -1 0 1 "100 ints: REVERSED"
+psstatstests 0 100 -1 0 1 "100 negative ints: REVERSED"
 psstatstests 0 100 1 r20 1 "100 ints: 20 ROTATIONS"
 psstatstests 0 100 1 r-20 1 "100 ints: 20 ROTATIONS INVERTED"
 psstatstests 99 100 -1 r-20 1 "100 ints: 20 ROTATIONS INVERTED REVERSED"
