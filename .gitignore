@@ -8,7 +8,6 @@ copyed_project
 /.tmp/
 /trash/
 /.trash/
-/*/demo/
 test_*
 tmp_*
 *.tmp

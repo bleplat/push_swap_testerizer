@@ -6,57 +6,52 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 20:54:33 by bleplat           #+#    #+#             */
-/*   Updated: 2019/03/04 23:26:13 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 13:41:57 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "unistd.h"
+#include <unistd.h>
 
-static void		zeroize(int *i_new, char **newstr,
-						size_t *newsize, int *read_rst)
-{
-	(*newstr) = ft_memalloc(8);
-	(*newsize) = (*newstr) ? 8 : 0;
-	(*i_new) = (*newstr) ? 0 : -1;
-	(*read_rst) = (*newstr) ? 0 : -3;
-}
+#include "libft.h"
 
 /*
 ** Read a fd char by char and put in 'p_dst' everything read, ended by
 ** a '\0', until a '\n' is encountered, this '\n' included.
+** p_dst will be set to NULL on error or if 0 chars were read.
 ** Return a negative code on error.
 ** Return -2 if max_line_size was reached.
 ** Return -3 on malloc failure.
 ** Return the count of characters read otherwise.
 ** /!\ You must free the outputed line yourself.
+**
+** Might be used in conjunction with ft_strpopnls().
 */
 
 int				ft_readtonl(int fd, char **p_dst, int max_line_size)
 {
-	char		read_c;
-	int			read_rst;
-	char		*nstr;
-	size_t		newsize;
-	int			i_new;
+	t_array			*chars_a;
+	char			*p_char;
+	char			c;
+	char			c_count;
 
-	zeroize(&i_new, &nstr, &newsize, &read_rst);
-	while (nstr && (read_rst = read(fd, &read_c, 1)) > 0)
+	*p_dst = NULL;
+	if (!(chars_a = ft_array_new(sizeof(char), ft_min(max_line_size + 1, 8))))
+		return (FT_READTONL_MALLOC_FAILED);
+	while ((c_count = read(fd, &c, 1)) > 0)
 	{
-		if (max_line_size >= 0 && i_new >= max_line_size)
-			return (-2 + ft_free0(nstr));
-		if ((size_t)(i_new + 1) >= newsize)
-			if (ft_memrealloc((void**)&nstr, &newsize, ft_min(8, newsize * 2)))
-				return (-3 + ft_free0(nstr));
-		nstr[i_new] = read_c;
-		nstr[i_new + 1] = '\0';
-		if (read_c == '\n' && (i_new += 1))
-			break ;
-		i_new++;
+		if (chars_a->item_count > max_line_size)
+			return (ft_array_del0(&chars_a) + FT_READTONL_LINE_TOO_LONG);
+		if (!(p_char = ft_array_newitem(chars_a)))
+			return (ft_array_del0(&chars_a) + FT_READTONL_MALLOC_FAILED);
+		*p_char = c;
+		if (c == '\n')
+			break;
 	}
-	if (read_rst < 0)
-		return (read_rst + ft_free0(nstr));
-	if (p_dst != NULL)
-		*p_dst = nstr;
-	return (i_new);
+	if (chars_a->item_count == 0)
+		return (ft_array_del0(&chars_a));
+	if (!(p_char = ft_array_newitem(chars_a)))
+		return (ft_array_del0(&chars_a) + FT_READTONL_MALLOC_FAILED);
+	*p_char = '\0';
+	*p_dst = chars_a->items;
+	return ((chars_a->item_count - 1) + ft_free0(chars_a));
 }

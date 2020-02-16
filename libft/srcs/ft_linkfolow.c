@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 09:46:47 by bleplat           #+#    #+#             */
-/*   Updated: 2019/04/10 18:28:43 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/01/15 14:44:52 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ char			*ft_linkfolow(const char *link)
 	{
 		readed = readlink(link, dst, dst_len);
 		if (readed < 0)
-			return (NULL + ft_free0(dst));
+		{
+			ft_free0(dst);
+			return (NULL);
+		}
 		if (readed < dst_len)
 			return (dst);
 	}

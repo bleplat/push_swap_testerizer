@@ -6,7 +6,7 @@
 #    By: bleplat <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/07 09:05:04 by bleplat           #+#    #+#              #
-#    Updated: 2019/05/14 17:02:01 by bleplat          ###   ########.fr        #
+#    Updated: 2020/02/16 14:12:21 by bleplat          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,15 +16,15 @@
 
 NAME_1  =   libft.a
 NAME_2  =   libftmo.so
-NAME    =   $(NAME_1)_$(NAME_2)
-ALL_NAMES = $(NAME_1) $(NAME_2)
+NAME    =   $(NAME_1)_$(NAME_2)_demos
+ALL_NAMES = $(NAME_1) $(NAME_2) demos
 
 
 ###########################
 ###  L I B R A R I E S  ###
 ###########################
 
-# LIBFT_DIR = ./libft
+LIBFT_DIR   = .
 # LIBFT     = $(LIBFT_DIR)/libft.a
 # LIBFTMO   = $(LIBFT_DIR)/libftmo.a
 
@@ -73,6 +73,7 @@ FNT_1 =		ft_welcome.c \
 			ft_llrandom.c \
 			ft_ullrandom.c \
 			ft_swapint.c \
+			ft_swapptr.c \
 			ft_atoi.c \
 			ft_atoi32check.c \
 			ft_bzero.c \
@@ -114,6 +115,7 @@ FNT_1 =		ft_welcome.c \
 			ft_putendl_fd.c \
 			ft_putnbr.c \
 			ft_putnbr_fd.c \
+			ft_putxnbr_fd.c \
 			ft_putstr.c \
 			ft_putstr_fd.c \
 			ft_sqrt.c \
@@ -174,6 +176,7 @@ FNT_1 =		ft_welcome.c \
 			ft_memdel0.c \
 			ft_memdel1.c \
 			ft_free0.c \
+			ft_freen.c \
 			ft_ptrcount.c \
 			ft_isupper.c \
 			ft_array_new.c \
@@ -184,6 +187,7 @@ FNT_1 =		ft_welcome.c \
 			ft_array_at.c \
 			ft_array_clear.c \
 			ft_array_reset.c \
+			ft_array_removeat.c \
 			ft_pow.c \
 			ft_llpow.c \
 			ft_strcatchar.c \
@@ -256,13 +260,45 @@ FNT_1 =		ft_welcome.c \
 			ft_goodbye.c \
 
 FNT_2 =		ftmo_malloc.c \
-			ftmo_choice.c \
-			ftmo_mode.c \
-			ftmo_count.c \
+			ftmo_free.c \
+			ftmo_firstcall.c \
+			ftmo_lastcall.c \
 			ftmo_getenv.c \
-			ftmo_log.c \
+			ftmo_print.c \
+			ftmo_should_malloc_succeed.c \
+			ftmo_make_reg.c \
+			ftmo_track.c \
+			ft_isdigit.c \
+			ft_atoi.c \
+			ft_putchar_fd.c \
+			ft_putxnbr_fd.c \
+			ft_putstr_fd.c \
+			ft_putnbr_fd.c \
+			ft_strlen.c \
+			ft_strstr.c \
+			ft_strnstr.c \
+			ft_memmove.c \
+
 
 FNT = $(FNT_1) $(FNT_2)
+
+FNT_DEMO =	ft_allocs_demo \
+			ft_atoi32check_demo \
+			ft_colorwheel_demo \
+			ft_hrbyte_demo \
+			ft_ints_demo \
+			ft_linkfolow_demo \
+			ft_listdir_demo \
+			ft_mixcolors_demo \
+			ft_printf_bonus_list \
+			ft_printf_demo_8ints \
+			ft_printf_demo_8ints_asprintf \
+			ft_printf_demo_colors \
+			ft_printf_demo_n \
+			ft_printf_demo_r \
+			ft_printf_demo_rgb \
+			ft_readline_demo \
+			ft_readtonl_demo \
 
 
 ###########################
@@ -270,10 +306,11 @@ FNT = $(FNT_1) $(FNT_2)
 ###########################
 
 INCLUDES = includes
-SRC_DIR = srcs
-OBJ_DIR = .obj
-DEP_DIR = $(OBJ_DIR)
-LIB_DIR = libs
+SRC_DIR  = srcs
+OBJ_DIR  = .obj
+DEP_DIR  = $(OBJ_DIR)
+LIB_DIR  = libs
+DEMO_DIR = demo
 
 SRC = $(patsubst %, $(SRC_DIR)/%, $(FNT))
 DEP = $(patsubst %, $(DEP_DIR)/%.d, $(FNT))
@@ -281,6 +318,10 @@ OBJ = $(patsubst %, $(OBJ_DIR)/%.o, $(FNT))
 OBJ_C = $(patsubst %, $(OBJ_DIR)/%.o, $(FNT_C))
 OBJ_1 = $(patsubst %, $(OBJ_DIR)/%.o, $(FNT_1))
 OBJ_2 = $(patsubst %, $(OBJ_DIR)/%.o, $(FNT_2))
+
+SRC_DEMO = $(patsubst %, $(DEMO_DIR)/%.c, $(FNT_DEMO))
+OBJ_DEMO = $(patsubst %, $(OBJ_DIR)/$(DEMO_DIR)/%.o, $(FNT_DEMO))
+DEMO     = $(patsubst %, $(DEMO_DIR)/%.demo, $(FNT_DEMO))
 
 
 ###########################
@@ -295,7 +336,7 @@ CDEFINES = $(patsubst %, -D%, $(DEFINES))
 CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -I $(INCLUDES)
 # CFLAGS += -I $(LIBFT_DIR)/includes
-# LDFLAGS = -L $(LIBFT_DIR) -lft
+LDFLAGS = -L $(LIBFT_DIR) -lft -rdynamic
 # LDFLAGS = -L $(LIBFT_DIR) -lftmo
 
 
@@ -311,7 +352,7 @@ optimized: CFLAGS += -o3
 optimized: all
 
 .PHONY: $(NAME)
-$(NAME): $(NAME_1) $(NAME_2)
+$(NAME): $(ALL_NAMES)
 
 $(NAME_1): $(OBJ_C) $(OBJ_1)
 	@printf "\e[92m" || true
@@ -336,23 +377,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/% | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -o $@ -I $(INCLUDES) -c $<
 	@printf "\e[0m" || true
 
-.PHONY: ftmo_help
-ftmo_help:
-	@printf "\e[0mWrite the commands below in your shell to get libftmo ready:\n" || true
-	@printf "\e[97m" || true
-	export FTMO_COUNT=2147483647
-	export FTMO_MODE=8
-	export FTMO_EACH=1
-	export FTMO_LOGD=ftmo.log
-	@printf "\e[0mOn Linux: \e[97m LD_PRELOAD=libftmo.so ; ./a.out\n" || true
-	@printf "\e[0mOn Mac:   \e[97m DYLD_FORCE_FLAT_NAMESPACE=1 ; DYLD_INSERT_LIBRARIES=libftmo.so ; ./a.out\n" || true
-	@printf "\e[0mNote it's broken at 42, but you can link your program with \e[97m-lftmo\n"
-	@printf "\e[0m" || true
-
 .PHONY: clean
 clean:
 	@printf "\e[93m" || true
 	rm -f $(OBJ)
+	rm -rf $(OBJ_DEMO)
 	rm -f $(OBJ_DIR)/*.o
 	rmdir $(OBJ_DIR) || true
 	@printf "\e[0m" || true
@@ -361,6 +390,7 @@ clean:
 fclean: clean
 	@printf "\e[91m" || true
 	rm -f $(ALL_NAMES)
+	rm -f $(DEMO)
 	@printf "\e[0m" || true
 
 .PHONY: re
@@ -370,7 +400,6 @@ re: fclean all
 .PHONY: delete_libs_gits
 delete_libs_gits:
 	@printf "\e[0m" || true
-	rm -rf $(LIB_DIR)/*/.git # Safety to prevent gits inside gits, requiered at 42.
 	@printf "\e[0m" || true
 
 .PHONY: run
@@ -379,3 +408,42 @@ run: $(NAME)
 	@clear
 	@./$< || printf "\e[31mFailed to run \"$<\"!\n" || true
 	@printf "\e[31mYou cannot run a library!\n" || true
+
+
+###########################
+###  D O C   R U L E S  ###
+###########################
+
+display_debug:
+	echo $(DEMO_DIR)
+
+.PHONY: demos
+demos: $(DEMO)
+
+$(DEMO_DIR)/%.demo: $(OBJ_DIR)/$(DEMO_DIR)/%.o libft.a
+	@printf "\e[92m" || true
+	gcc $(CFLAGS) -o $@ $< $(LDFLAGS)
+	@printf "\e[0m" || true
+
+$(OBJ_DIR)/$(DEMO_DIR): $(OBJ_DIR)
+	@printf "\e[94m" || true
+	mkdir -p $@
+	@printf "\e[0m" || true
+
+$(OBJ_DIR)/$(DEMO_DIR)%.o: $(DEMO_DIR)/%.c | $(OBJ_DIR)/$(DEMO_DIR)
+	@printf "\e[96m" || true
+	$(CC) $(CFLAGS) -o $@ -I $(INCLUDES) -c $<
+	@printf "\e[0m" || true
+
+.PHONY: ftmo_help
+ftmo_help:
+	@printf "\e[0mWrite the commands below in your shell to get libftmo ready:\n" || true
+	@printf "\e[97m" || true
+	export FTMO_IGNORES=-1
+	export FTMO_MODE=0
+	export FTMO_EACH=1
+	export FTMO_LOGD=ftmo.log
+	@printf "\e[0mOn Linux: \e[97m LD_PRELOAD=libftmo.so ; ./a.out\n" || true
+	@printf "\e[0mOn Mac:   \e[97m DYLD_FORCE_FLAT_NAMESPACE=1 ; DYLD_INSERT_LIBRARIES=libftmo.so ; ./a.out\n" || true
+	@printf "\e[0mYou should also be alble to link your program with \e[97m-lftmo\n"
+	@printf "\e[0mCompiling your program with -rdynamic will enable call stack informations (static functions will not be seen by ftmo)." || true

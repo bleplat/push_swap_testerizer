@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_demo_r.c                                 :+:      :+:    :+:   */
+/*   ft_swapptr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/16 20:06:16 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/16 20:06:21 by bleplat          ###   ########.fr       */
+/*   Created: 2019/05/17 20:23:09 by bleplat           #+#    #+#             */
+/*   Updated: 2019/05/17 20:23:21 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
-
-int				main(void)
+void			ft_swapptr(void **a, void **b)
 {
-	static char		*data = "Some \x01\x02hAArdd \x9f coded\x82 non-asc\xd1ii";
+	void	*swp;
 
-	ft_printf("With %%s:  \"%s\"\n", data);
-	ft_printf("With %%r:  \"%r\"\n", data);
-	ft_printf("With %%#r: \"%#r\"\n", data);
-	return (0);
+	swp = (*a);
+	(*a) = (*b);
+	(*b) = swp;
 }

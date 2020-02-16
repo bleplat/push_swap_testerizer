@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ftmo_choice.c                                      :+:      :+:    :+:   */
+/*   ft_putxnbr_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/09 19:09:35 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/09 23:06:43 by bleplat          ###   ########.fr       */
+/*   Created: 2018/11/07 15:19:55 by bleplat           #+#    #+#             */
+/*   Updated: 2020/02/14 03:40:38 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftmo.h"
+#include "libft.h"
 
-static void		ftmo_init(void)
+/*
+** Put a big hex number.
+**
+** TODO: /!\ FUNCTION MADE IN A HURRY!
+*/
+
+void	ft_putxnbr_fd(unsigned long long n, int fd)
 {
-	ftmo_count(ftmo_getenv_mode());
-	ftmo_count(ftmo_getenv_count());
-	ftmo_log(FTMO_FUNC_SETUP, ftmo_getenv_logd(), (void*)0);
-}
-
-int				ftmo_choice(void)
-{
-	static int		need_init = 1;
-
-	if (need_init)
-	{
-		ftmo_init();
-		need_init = 0;
-	}
-	return (ftmo_mode(FTMO_MODE_TRIGGER));
+	if (n >= 16)
+		ft_putxnbr_fd(n / 16, fd);
+	ft_putchar_fd("0123456789abcdef"[n % 16], fd);
 }

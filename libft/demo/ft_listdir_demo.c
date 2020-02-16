@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_listdir_demo.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/01 04:25:28 by bleplat           #+#    #+#             */
-/*   Updated: 2019/04/10 18:28:07 by bleplat          ###   ########.fr       */
+/*   Created: 2019/05/16 20:06:00 by bleplat           #+#    #+#             */
+/*   Updated: 2019/05/16 20:06:02 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "libft.h"
 

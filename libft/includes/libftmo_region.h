@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_demo_r.c                                 :+:      :+:    :+:   */
+/*   libftmo_region.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/16 20:06:16 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/16 20:06:21 by bleplat          ###   ########.fr       */
+/*   Created: 2020/02/14 03:52:33 by bleplat           #+#    #+#             */
+/*   Updated: 2020/02/15 00:16:54 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
+#ifndef LIBFTMO_REGION_H
+# define LIBFTMO_REGION_H
 
-int				main(void)
+/*
+** Structure to store malloced regions.
+*/
+
+struct							s_ftmo_region
 {
-	static char		*data = "Some \x01\x02hAArdd \x9f coded\x82 non-asc\xd1ii";
+	long				index;
+	size_t				size;
+	void				*ptr;
+	char				**calltree;
+};
+typedef struct s_ftmo_region	t_ftmo_region;
 
-	ft_printf("With %%s:  \"%s\"\n", data);
-	ft_printf("With %%r:  \"%r\"\n", data);
-	ft_printf("With %%#r: \"%#r\"\n", data);
-	return (0);
-}
+t_ftmo_region					ftmo_make_reg(int index, void *ptr, size_t sz);
+
+#endif

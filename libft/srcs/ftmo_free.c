@@ -6,7 +6,7 @@
 /*   By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 21:09:05 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/14 03:46:26 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/14 02:13:48 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,48 +17,36 @@
 #include "libftmo.h"
 
 /*
-** ftmo_libc_malloc:
+** ftmo_libc_free:
 **
-** Real malloc function.
+** Real call to free.
 */
 
-void		*ftmo_libc_malloc(size_t sz)
+void		ftmo_libc_free(void *ptr)
 {
-	void		*(*libc_malloc)(size_t);
+	void		(*libc_free)(void *);
 
-	libc_malloc = dlsym(RTLD_NEXT, "malloc");
-	return (libc_malloc(sz));
+	libc_free = dlsym(RTLD_NEXT, "free");
+	libc_free(ptr);
 }
 
 /*
-** malloc:
+** free:
 **
-** Overload the malloc function in the libc.
+** Overload the free function in the libc.
 */
 
-void		*malloc(size_t sz)
+void		free(void *ptr)
 {
-	static long		call_count = -1;
 	static int		in_progress = 0;
-	int				should_malloc_succeed;
-	void			*malloced;
 
 	if (in_progress)
-		return (ftmo_libc_malloc(sz));
+	{
+		ftmo_libc_free(ptr);
+		return ;
+	}
 	in_progress = 1;
-	call_count++;
-	if (call_count == 0)
-		if (ftmo_firstcall() != 0)
-		{
-			ftmo_log(-1, "Internal error while initializing");
-			return (ftmo_libc_malloc(sz));
-		}
-	should_malloc_succeed = ftmo_should_malloc_succeed(call_count);
-	if (should_malloc_succeed)
-		malloced = ftmo_libc_malloc(sz);
-	else
-		malloced = (void*)0;
-	ftmo_track(FTMO_TRACK_MALLOC, malloced, sz, call_count);
+	ftmo_libc_free(ptr);
+	ftmo_track(FTMO_TRACK_FREE, ptr, 0, -1);
 	in_progress = 0;
-	return (malloced);
 }

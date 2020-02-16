@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_demo_8ints.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/27 22:16:16 by bleplat           #+#    #+#             */
-/*   Updated: 2019/02/27 22:16:18 by bleplat          ###   ########.fr       */
+/*   Created: 2019/05/16 20:05:44 by bleplat           #+#    #+#             */
+/*   Updated: 2019/05/16 20:05:48 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int				main(int argc, char **argv)
 {
 	int x;
 
+	x = -99;
 	if (argc > 10)
 		ft_printf("You can use up to 8 integers as args.\n");
 	else

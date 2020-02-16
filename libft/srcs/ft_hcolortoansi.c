@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 10:56:29 by bleplat           #+#    #+#             */
-/*   Updated: 2019/02/27 19:56:25 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/15 01:08:17 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int				effect(char **cur)
 	if ((*cur += ft_alnumpop(*cur, "reset")) - last)
 		return ((int)(1 + (*cur = ft_strdup("\e[0m"))));
 	if ((*cur += ft_alnumpop(*cur, "normal")) - last)
-		return ((int)(1 + (*cur = ft_strdup("\e[0m"))));
+		return ((int)(1 + (*cur = ft_strdup("\e[21m\e[23m\e[24m\e[29"))));
 	if ((*cur += ft_alnumpop(*cur, "bold")) - last)
 		return ((int)(1 + (*cur = ft_strdup("\e[1m"))));
 	if ((*cur += ft_alnumpop(*cur, "dim")) - last)
@@ -69,9 +69,9 @@ static int				effect(char **cur)
 	if ((*cur += ft_alnumpop(*cur, "underline")) - last)
 		return ((int)(1 + (*cur = ft_strdup("\e[4m"))));
 	if ((*cur += ft_alnumpop(*cur, "strike")) - last)
-		return ((int)(1 + (*cur = ft_strdup("\e[4m"))));
+		return ((int)(1 + (*cur = ft_strdup("\e[9m"))));
 	if ((*cur += ft_alnumpop(*cur, "strikeout")) - last)
-		return ((int)(1 + (*cur = ft_strdup("\e[4m"))));
+		return ((int)(1 + (*cur = ft_strdup("\e[9m"))));
 	return (0);
 }
 

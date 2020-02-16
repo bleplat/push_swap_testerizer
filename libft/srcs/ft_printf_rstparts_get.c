@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 16:48:13 by bleplat           #+#    #+#             */
-/*   Updated: 2019/04/09 19:15:26 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/01/15 14:47:55 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,15 @@ t_array		*ft_printf_rstparts_get(const char *fmt)
 	while (*fmt != '\0')
 	{
 		if (!(new_item = ft_array_newitem(array)))
-			return (NULL + ft_printf_rstparts_clean(&array));
+		{
+			ft_printf_rstparts_clean(&array);
+			return (NULL);
+		}
 		if (ft_printf_nextrstpart((char**)&fmt, (char*)fmt, new_item) < 0)
-			return (NULL + ft_printf_rstparts_clean(&array));
+		{
+			ft_printf_rstparts_clean(&array);
+			return (NULL);
+		}
 	}
 	ft_printf_rstparts_autoindices(array->items, array->item_count);
 	return (array);

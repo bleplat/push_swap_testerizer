@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_demo_r.c                                 :+:      :+:    :+:   */
+/*   ftmo_lastcall.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/16 20:06:16 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/16 20:06:21 by bleplat          ###   ########.fr       */
+/*   Created: 2020/02/13 22:11:24 by bleplat           #+#    #+#             */
+/*   Updated: 2020/02/14 02:33:01 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
+#include "libftmo.h"
 
-int				main(void)
+void		ftmo_lastcall(void)
 {
-	static char		*data = "Some \x01\x02hAArdd \x9f coded\x82 non-asc\xd1ii";
-
-	ft_printf("With %%s:  \"%s\"\n", data);
-	ft_printf("With %%r:  \"%r\"\n", data);
-	ft_printf("With %%#r: \"%#r\"\n", data);
-	return (0);
+	ftmo_track(FTMO_TRACK_VERIFY, NULL, 0, -1);
+	ftmo_track(FTMO_TRACK_CLEANUP, NULL, 0, -1);
 }

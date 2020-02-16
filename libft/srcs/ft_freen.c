@@ -1,33 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_array_del.c                                     :+:      :+:    :+:   */
+/*   ft_freen.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/07 18:09:28 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/16 13:28:40 by bleplat          ###   ########.fr       */
+/*   Created: 2018/12/07 17:03:43 by bleplat           #+#    #+#             */
+/*   Updated: 2020/01/15 14:42:40 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-#include "libft.h"
-#include "libft_array.h"
-
-/*
-** Delete an ft_array and set the pointer to NULL.
-*/
-
-void		ft_array_del(t_array **a)
+void		*ft_freen(void *to_free)
 {
-	free((*a)->items);
-	free((*a));
-	(*a) = NULL;
-}
-
-int			ft_array_del0(t_array **a)
-{
-	ft_array_del(a);
-	return (0);
+	free(to_free);
+	return (NULL);
 }

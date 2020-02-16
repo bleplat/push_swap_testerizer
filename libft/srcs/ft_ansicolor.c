@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/03 20:19:27 by bleplat           #+#    #+#             */
-/*   Updated: 2019/02/27 19:55:39 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/01/15 14:45:36 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ char			*ft_ansicolor(int color, int flags)
 	if (flags & FT_ANSICOLOR_FLAG_RGB)
 	{
 		if (putrgb(new_str, color) < 0)
-			return (NULL + ft_free0(new_str));
+			return (ft_freen(new_str));
 	}
 	else
 	{
 		if (putcolor(new_str, color) < 0)
-			return (NULL + ft_free0(new_str));
+			return (ft_freen(new_str));
 	}
 	ft_strcat(new_str, "m");
 	return (new_str);

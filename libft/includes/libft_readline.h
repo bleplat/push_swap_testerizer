@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/02 13:34:49 by bleplat           #+#    #+#             */
-/*   Updated: 2019/03/04 14:46:43 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 13:20:46 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # define FT_READLINE_BUFF_SIZE 4
 
 /*
+** DISCOURAGED FOR 42 PROJECTS
+** see ft_readtonl
+**
 ** t_ftrl_container
 **
 ** Container used in ft_readline()

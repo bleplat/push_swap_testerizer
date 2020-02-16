@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 10:59:30 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/07 20:43:10 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 13:22:14 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@
 
 # define FT_ANSICOLOR_FLAG_BACKGROUND 0x1
 # define FT_ANSICOLOR_FLAG_RGB 0x2
+
+# define FT_READTONL_MALLOC_FAILED -3
+# define FT_READTONL_LINE_TOO_LONG -2
 
 /*
 ** L i b f t   P a r t   I
@@ -96,6 +99,7 @@ void			ft_putchar_fd(char c, int fd);
 void			ft_putstr_fd(char const *s, int fd);
 void			ft_putendl_fd(char const *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
+void			ft_putxnbr_fd(unsigned long long n, int fd);
 
 /*
 ** C h a i n e d   l i s t s
@@ -135,6 +139,7 @@ t_llint			ft_llpow(t_llint nb, unsigned int p);
 long double		ft_ldsign(long double d);
 int				ft_ldsize(long double d);
 void			ft_swapint(int *a, int *b);
+void			ft_swapptr(void **a, void **b);
 double			ft_dclamp(double x, double min, double max);
 double			ft_dmix(double x, double y, double a);
 
@@ -241,6 +246,7 @@ int				ft_autofree_abort0(void);
 int				ft_memdel0(void **to_free);
 int				ft_memdel1(void **to_free);
 int				ft_free0(void *to_free);
+void			*ft_freen(void *to_free);
 int				ft_ptrcount(void **ptr);
 int				ft_memrealloc(void **mem, size_t *prev_size, size_t new_size);
 void			*ft_memdup(const void *s1, size_t size);

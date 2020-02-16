@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_demo_r.c                                 :+:      :+:    :+:   */
+/*   ftmo_firstcall.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/16 20:06:16 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/16 20:06:21 by bleplat          ###   ########.fr       */
+/*   Created: 2020/02/13 21:59:56 by bleplat           #+#    #+#             */
+/*   Updated: 2020/02/14 02:32:07 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
+#include <stdlib.h>
 
-int				main(void)
+#include "libftmo.h"
+
+/*
+** Function called once in ftmo.
+** It is called just before the first call to malloc, by the override.
+** Its purpose is to contain the initialization stuff, including the setup of
+** the exit function, ftmo_lastcall.
+*/
+
+int				ftmo_firstcall(void)
 {
-	static char		*data = "Some \x01\x02hAArdd \x9f coded\x82 non-asc\xd1ii";
+	int			rst;
 
-	ft_printf("With %%s:  \"%s\"\n", data);
-	ft_printf("With %%r:  \"%r\"\n", data);
-	ft_printf("With %%#r: \"%#r\"\n", data);
-	return (0);
+	rst = atexit(ftmo_lastcall);
+	return (rst);
 }

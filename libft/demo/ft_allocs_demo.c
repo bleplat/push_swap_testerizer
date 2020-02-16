@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 22:20:59 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/14 15:55:44 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 13:56:57 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 
 /*
 ** This is used to test the LibftMo library, present in this libft.
-** Because LibftMo is used to find memory leaks, this program may
-** leak on purpose.
+** Because LibftMo is used to find memory leaks, this program will
+** leak ON PURPOSE.
+**
+** see 'make ftmo_help'.
 */
 
 void			alloc(int argc, char **argv, int i)
@@ -39,7 +41,7 @@ void			alloc(int argc, char **argv, int i)
 	plus = 0;
 	if ((i + 1 < argc) && argv[i + 1][0] == '+' && argv[i + 1][1] == '\0')
 		plus = 1;
-	mem = malloc(ft_atoi(size_str));
+	mem = ft_strnew(ft_atoi(size_str));
 	ft_putstr("Allocated some memory...\n");
 	if (plus == 1)
 		alloc(argc, argv, i + 2);

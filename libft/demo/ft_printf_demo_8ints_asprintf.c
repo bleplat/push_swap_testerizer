@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_demo_8ints_asprintf.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/27 22:16:04 by bleplat           #+#    #+#             */
-/*   Updated: 2019/02/27 22:31:03 by bleplat          ###   ########.fr       */
+/*   Created: 2019/05/16 20:07:02 by bleplat           #+#    #+#             */
+/*   Updated: 2019/05/16 20:07:03 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdlib.h>
 
 #include "libft.h"
 #include "ft_printf.h"
@@ -18,6 +20,7 @@ int				main(int argc, char **argv)
 	int		x;
 	char	*dst;
 
+	x = -99;
 	dst = (void*)0;
 	if (argc > 10)
 		ft_printf("You can use up to 8 integers as args.\n");

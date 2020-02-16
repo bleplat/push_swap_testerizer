@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_readline_demo.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: bleplat <bleplat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/04 14:59:34 by bleplat           #+#    #+#             */
-/*   Updated: 2019/03/04 22:35:04 by bleplat          ###   ########.fr       */
+/*   Created: 2019/05/16 20:07:17 by bleplat           #+#    #+#             */
+/*   Updated: 2019/05/16 20:07:19 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "libft.h"
 #include "libft_readline.h"
 
-int				loop(int fd)
+void			loop(int fd)
 {
 	int		color;
 	char	*line;
