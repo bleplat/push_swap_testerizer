@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 10:59:30 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/16 13:22:14 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/17 19:58:13 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ double			ft_dmix(double x, double y, double a);
 */
 
 int				*ft_intsrange(int min, int count, int step);
+int				*ft_intsrangeop(int min, int count, int step, char op);
 void			ft_intsshuffle(int *array, int count);
 void			ft_intsnshuffle(int *array, int count, int shuffles_count);
 void			ft_putints(const int *array, int count, const char *sep);

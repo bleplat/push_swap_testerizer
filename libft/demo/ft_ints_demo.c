@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 16:46:37 by bleplat           #+#    #+#             */
-/*   Updated: 2019/05/02 18:22:17 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/17 20:50:46 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int				usage(char *program_name)
 	ft_putstr("\tmin\tMinimum number to output.\n");
 	ft_putstr("\tcount\tHow many numbers to output.\n");
 	ft_putstr("\tstep\tInterval between each number.\n");
+	ft_putstr("\t\t\tCan be prefixed with '*' or '/' for nonlinear lists.\n");
 	ft_putstr("\tshuffle\tHow to shuffle, determined by the given number:\n");
 	ft_putstr("\t\t\tn < 0: shuffle the whole list.\n");
 	ft_putstr("\t\t\tn = 0: no shuffle.\n");
@@ -29,24 +30,43 @@ int				usage(char *program_name)
 }
 
 /*
+** Only generate an unshuffled list.
+*/
+
+int				*generate_list(int argc, char **argv)
+{
+	int		min;
+	int		count;
+	int		step;
+	char	op;
+
+	min = ft_atoi(argv[1]);
+	count = ft_atoi(argv[2]);
+	if (argc <= 3)
+		step = 1;
+	else if (!ft_strchr("-*/%", argv[3][0]))
+		step = ft_atoi(argv[3]);
+	else
+		step = ft_atoi(argv[3] + 1);
+	op = (argc > 3) ? argv[3][0] : '+';
+	return (ft_intsrangeop(min, count, step, op));
+}
+
+/*
 ** Program to create an integer list, and shuffle it, whole, or more or less.
 */
 
 int				main(int argc, char **argv)
 {
-	int		min;
-	int		count;
-	int		step;
 	int		*ints;
+	int		count;
 	int		shuffle;
 
 	if (argc < 3)
 		return (usage(argv[0]));
-	min = ft_atoi(argv[1]);
-	count = ft_atoi(argv[2]);
-	step = (argc > 3) ? ft_atoi(argv[3]) : 1;
-	if (!(ints = ft_intsrange(min, count, step)))
+	if (!(ints = generate_list(argc, argv)))
 		return (2);
+	count = ft_atoi(argv[2]);
 	shuffle = (argc > 4) ? ft_atoi(argv[4]) : 0;
 	if (shuffle < 0)
 		ft_intsshuffle(ints, count);

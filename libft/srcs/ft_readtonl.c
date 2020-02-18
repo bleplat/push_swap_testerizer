@@ -6,7 +6,7 @@
 /*   By: bleplat <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 20:54:33 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/16 13:41:57 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/17 20:51:59 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int				ft_readtonl(int fd, char **p_dst, int max_line_size)
 			return (ft_array_del0(&chars_a) + FT_READTONL_MALLOC_FAILED);
 		*p_char = c;
 		if (c == '\n')
-			break;
+			break ;
 	}
 	if (chars_a->item_count == 0)
 		return (ft_array_del0(&chars_a));

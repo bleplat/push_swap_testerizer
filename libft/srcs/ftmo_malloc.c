@@ -6,7 +6,7 @@
 /*   By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 21:09:05 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/14 03:46:26 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 16:44:17 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void		*ftmo_libc_malloc(size_t sz)
 	void		*(*libc_malloc)(size_t);
 
 	libc_malloc = dlsym(RTLD_NEXT, "malloc");
+	if (!libc_malloc)
+		return (NULL);
 	return (libc_malloc(sz));
 }
 

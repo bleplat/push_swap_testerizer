@@ -6,7 +6,7 @@
 /*   By: bleplat <bleplat@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 21:09:05 by bleplat           #+#    #+#             */
-/*   Updated: 2020/02/14 02:13:48 by bleplat          ###   ########.fr       */
+/*   Updated: 2020/02/16 16:44:28 by bleplat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void		ftmo_libc_free(void *ptr)
 	void		(*libc_free)(void *);
 
 	libc_free = dlsym(RTLD_NEXT, "free");
+	if (!libc_free)
+		return ;
 	libc_free(ptr);
 }
 

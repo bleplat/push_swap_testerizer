@@ -370,6 +370,17 @@ do
 done
 endtests
 
+begintests "'push_swap': Non-linear lists"
+pssorttest "$(./generator 1 8 \*2 -1)" 8 -1
+pssorttest "$(./generator 1 16 \*2 -1)" 16 -1
+pssorttest "$(./generator 1 32 \*2 -1)" 32 -1
+pssorttest "$(./generator 8000 8 /2 -1)" 8 -1
+pssorttest "$(./generator 7777777 16 /2 -1)" 16 -1
+pssorttest "$(./generator 40000 100 \*3 -1)" 100 -1
+pssorttest "$(./generator 1 16 \*-3 -1)" 16 -1
+pssorttest "$(./generator 1 32 \*-2 -1)" 32 -1
+endtests
+
 begintests "'push_swap': statistics"
 N_TESTS=32
 # small arrays
